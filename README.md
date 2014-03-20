@@ -1,5 +1,5 @@
 
-## OneNote service API Windows Phone Sample README
+## OneNote API Windows Phone Sample README
 
 Created by Microsoft Corporation, 2014. Provided As-is without warranty. Trademarks mentioned here are the property of their owners.
 
@@ -12,7 +12,7 @@ find additional documentation at the links below.
 * [POST simple HTML to a new OneNote QuickNotes page](http://msdn.microsoft.com/EN-US/library/office/dn575428.aspx)
 * [POST multi-part message with image data included in the request](http://msdn.microsoft.com/EN-US/library/office/dn575432.aspx)
 * [POST page with a URL rendered as an image](http://msdn.microsoft.com/EN-US/library/office/dn575431.aspx)
-* [POST page with a file attachment](http://msdn.microsoft.com/en-us/library/office/dn575436.aspx)
+* [POST page with a PDF file attachment](http://msdn.microsoft.com/en-us/library/office/dn575436.aspx)
 * [Extract the returned oneNoteClientURL and oneNoteWebURL links](http://msdn.microsoft.com/EN-US/library/office/dn575433.aspx)
 
 ### Prerequisites
@@ -57,11 +57,19 @@ should fix it.)
 5. Sign in to your Microsoft account in the running app.
 6. Allow the app to create new pages in OneNote.
 
-### Version Info
+### Version info
 
 This is the initial public release for this code sample.
+
+### Known issues
+
+**Launching OneNote** There are a couple of issues with regard to opening the OneNote
+client in this sample. Clicking the "See Page" button after a successful POST will 
+only work on a physical Windows Phone device. In addition, the Microsoft account you 
+use to authenticate in the sample must be same as the Microsoft account in the phone 
+Account settings page. 
   
-### Learning More
+### Learning more
 
 * Visit the [dev.onenote.com](http://dev.onenote.com) Dev Center
 * Contact us on [StackOverflow (tagged OneNote)](http://go.microsoft.com/fwlink/?LinkID=390182)
@@ -71,6 +79,6 @@ This is the initial public release for this code sample.
 Also, see the [short overview/tutorial](http://go.microsoft.com/fwlink/?LinkID=390179). 
 * [API Reference](http://msdn.microsoft.com/en-us/library/office/dn575437.aspx) documentation
 * [Debugging / Troubleshooting](http://msdn.microsoft.com/EN-US/library/office/dn575430.aspx)
-* [Getting Started](http://go.microsoft.com/fwlink/?LinkID=331026) with the OneNote service API
+* [Getting Started](http://go.microsoft.com/fwlink/?LinkID=331026) with the OneNote API
 
   
