@@ -32,7 +32,7 @@
 // governing permissions and limitations under the License.
 //*********************************************************
 -->
-    
+
     <phone:PhoneApplicationPage.Resources>
         <!-- Visit http://go.microsoft.com/fwlink/?LinkId=392537 for instructions on getting a Client Id. Please specify your client ID at the ClientId field below and rebuild the application. -->
         <System:String x:Key="ClientId">Insert Your Client Id Here</System:String>
@@ -88,12 +88,13 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <Button x:Name="btn_CreateSimple" Content="Create simple page" HorizontalAlignment="Left" Margin="17,160,0,0" VerticalAlignment="Top" Width="419" Click="btn_CreateSimple_Click"/>
-            <Controls:SignInButton Content="SignInButton" HorizontalAlignment="Left" Margin="126,81,0,0" VerticalAlignment="Top" Scopes="office.onenote_create wl.signin wl.offline_access" Branding="MicrosoftAccount" SessionChanged="OnSessionChanged" Width="192" ClientId="{StaticResource ClientId}"/>
-            <TextBlock x:Name="infoTextBlock" HorizontalAlignment="Center" Margin="22,26,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="424"/>
+            <Controls:SignInButton Content="SignInButton" HorizontalAlignment="Left" Margin="118,16,0,0" VerticalAlignment="Top" Scopes="office.onenote_create wl.signin wl.offline_access" Branding="MicrosoftAccount" SessionChanged="OnSessionChanged" Width="192" ClientId="{StaticResource ClientId}"/>
+            <TextBlock x:Name="infoTextBlock" HorizontalAlignment="Center" Margin="22,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="424"/>
+            <TextBox x:Name="textBox_sectionName" HorizontalAlignment="Center" Margin="0,89,37,0" VerticalAlignment="Top" Width="419" TextChanged="sectionName_Change" GotFocus="sectionName_GotFocus" LostFocus="sectionName_LostFocus" />
             <Button x:Name="btn_CreateWithImage" Content="Create page with image" HorizontalAlignment="Left" Margin="17,232,0,0" VerticalAlignment="Top" Width="419" Click="btn_CreateWithImage_Click" />
             <Button x:Name="btn_CreateWithUrl" Content="Create page with URL Snapshot" HorizontalAlignment="Left" Margin="17,304,0,0" VerticalAlignment="Top" Width="419" Click="btn_CreateWithUrl_Click" />
             <Button x:Name="btn_CreateWithHtml" Content="Create page with HTML Snapshot" HorizontalAlignment="Left" Margin="17,376,0,0" VerticalAlignment="Top" Width="419" Click="btn_CreateWithHtml_Click" />
-            <Button x:Name="btn_CreateWithAttachment" Content="Create page with attachment" HorizontalAlignment="Left" Margin="17,448,0,0" VerticalAlignment="Top" Width="419" Click="btn_CreateWithAttachment_Click" />
+            <Button x:Name="btn_CreateWithAttachmentAndPdfRendering" Content="Create page with a PDF document attached and rendered" HorizontalAlignment="Left" Margin="17,448,0,0" VerticalAlignment="Top" Width="419" Click="btn_CreateWithAttachmentAndPdfRendering_Click" />
             <HyperlinkButton x:Name="hyperlinkCreatedPage" Content="See Page" HorizontalAlignment="Left" Margin="160,539,0,0" VerticalAlignment="Top"  Click="HyperlinkButton_Click" Visibility="Collapsed"/>
 
         </Grid>

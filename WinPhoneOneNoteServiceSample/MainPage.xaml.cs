@@ -50,9 +50,30 @@ namespace WinPhoneOneNoteServiceSample
         private DateTimeOffset _accessTokenExpiration;
         private string _refreshToken; // Refresh token (only applicable when the app uses the wl.offline_access wl.signin scopes)
         private StandardResponse _response;
+		private string sectionName;
+
+		public string PagesEndpoint
+		{
+			get
+			{
+				if (String.IsNullOrWhiteSpace(sectionName) || sectionName.Equals(SectionNameHint))
+				{
+					return PagesEndpointBaseUrl;
+				}
+				else
+				{
+					return string.Format("{0}/?sectionName={1}", PagesEndpointBaseUrl, sectionName);
+				}
+			}
+			set
+			{
+				sectionName = value;
+			}
+		}
 
         // OneNote Service API v1.0 Endpoint
-        private const string PagesEndpoint = "https://www.onenote.com/api/v1.0/pages";
+        private const string PagesEndpointBaseUrl = "https://www.onenote.com/api/v1.0/pages";
+		private const string SectionNameHint = "Enter Section Name";
 
         // Collateral used to refresh access token (only applicable when the app uses the wl.offline_access wl.signin scopes)
         private const string MsaTokenRefreshUrl = "https://login.live.com/oauth20_token.srf";
@@ -64,7 +85,9 @@ namespace WinPhoneOneNoteServiceSample
         public MainPage()
         {
             InitializeComponent();
+			this.sectionName = "";
             this.Loaded += CheckIfClientIdUpdated;
+			this.textBox_sectionName.Text = SectionNameHint;
         }
 
         private void CheckIfClientIdUpdated(object sender, RoutedEventArgs e)
@@ -93,6 +116,7 @@ namespace WinPhoneOneNoteServiceSample
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             // Note: API only supports JSON return type.
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
             // Get and parse the HTTP response from the service
             HttpResponseMessage response = await httpClient.SendAsync(createMessage);
             _response = await ParseResponse(response);
@@ -120,7 +144,7 @@ namespace WinPhoneOneNoteServiceSample
 
             // Create the request message, which is a text/html single part in this case
             // The Service also supports content type multipart/form-data for more complex scenarios
-            var createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
+			var createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
             {
                 Content = new StringContent(simpleHtml, System.Text.Encoding.UTF8, "text/html")
             };
@@ -152,7 +176,7 @@ namespace WinPhoneOneNoteServiceSample
             using (var imageContent = new StreamContent(imageStream))
             {
                 imageContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-                HttpRequestMessage createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
+				HttpRequestMessage createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
                 {
                     // Create a multipart/form data request in this case
                     // The Service also supports single part text/html content for simple scenarios
@@ -187,7 +211,7 @@ namespace WinPhoneOneNoteServiceSample
 
             // Create the request message, which is a text/html single part in this case
             // The Service also supports content type multipart/form-data for more complex scenarios
-            var createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
+			var createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
             {
                 Content = new StringContent(simpleHtml, System.Text.Encoding.UTF8, "text/html")
             };
@@ -228,7 +252,7 @@ namespace WinPhoneOneNoteServiceSample
                                 "</body>" +
                                 "</html>";
 
-            var createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
+			var createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
             {
                 // Create a multipart/form data request in this case
                 // The Service also supports single part text/html for more simpler scenarios
@@ -243,9 +267,9 @@ namespace WinPhoneOneNoteServiceSample
         }
 
         /// <summary>
-        /// Creates a OneNote page with a file attachment
+        /// Creates a OneNote page with a PDF document attached and rendered
         /// </summary>
-        private async void btn_CreateWithAttachment_Click(object sender, RoutedEventArgs e)
+		private async void btn_CreateWithAttachmentAndPdfRendering_Click(object sender, RoutedEventArgs e)
         {
             const string attachmentPartName = "pdfattachment1";
             string date = GetDate();
@@ -255,8 +279,10 @@ namespace WinPhoneOneNoteServiceSample
                                 "<meta name=\"created\" content=\"" + date + "\" />" +
                                 "</head>" +
                                 "<body>" +
-                                "<h1>This is a page with a pdf file attachment</h1>" +
+                                "<h1>This is a page with a PDF file attachment</h1>" +
                                 "<object data-attachment=\"attachment.pdf\" data=\"name:" + attachmentPartName + "\" />" +
+								"<p>Here's the Content of the PDF document :</p>" +
+								"<img data-render-src=\"name:" + attachmentPartName + "\" alt=\"Hello World\" width=\"1500\" />" +
                                 "</body>" +
                                 "</html>";
             // Create the attachment part - make sure it is disposed after we've sent the message in order to close the stream.
@@ -264,7 +290,7 @@ namespace WinPhoneOneNoteServiceSample
             using (var attachmentContent = new StreamContent(attachmentStream))
             {
                 attachmentContent.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
-                HttpRequestMessage createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
+				HttpRequestMessage createMessage = new HttpRequestMessage(HttpMethod.Post, PagesEndpoint)
                 {
                     Content = new MultipartFormDataContent
                             {
@@ -488,9 +514,37 @@ namespace WinPhoneOneNoteServiceSample
             btn_CreateWithHtml.IsEnabled = shouldBeEnabled;
             btn_CreateWithImage.IsEnabled = shouldBeEnabled;
             btn_CreateWithUrl.IsEnabled = shouldBeEnabled;
-            btn_CreateWithAttachment.IsEnabled = shouldBeEnabled;
+			btn_CreateWithAttachmentAndPdfRendering.IsEnabled = shouldBeEnabled;
         }
 
         #endregion
+
+		private void sectionName_GotFocus(object sender, RoutedEventArgs e)
+		{
+			string currentFieldValue = textBox_sectionName.Text;
+			if (SectionNameHint.Equals(currentFieldValue))
+			{
+				textBox_sectionName.Text = string.Empty;
+			}
+		}
+
+		private void sectionName_Change(object sender, System.Windows.Controls.TextChangedEventArgs e)
+		{
+			sectionName = textBox_sectionName.Text;
+		}
+
+		private void sectionName_LostFocus(object sender, RoutedEventArgs e)
+		{
+			string newValue = textBox_sectionName.Text;
+			if (String.IsNullOrWhiteSpace(newValue))
+			{
+				sectionName = string.Empty;
+				textBox_sectionName.Text = SectionNameHint;
+			}
+			else
+			{
+				sectionName = newValue;
+			}
+		}
     }
 }
